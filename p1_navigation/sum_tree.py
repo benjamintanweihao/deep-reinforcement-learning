@@ -43,7 +43,7 @@ class SumTree:
 
         # idx points to a leaf node
         if left >= len(self.tree):
-            return self.tree[index]
+            return index
 
         if self.tree[left] >= s:
             return self.retrieve(left, s)

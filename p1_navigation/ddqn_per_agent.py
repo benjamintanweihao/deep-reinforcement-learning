@@ -2,6 +2,8 @@ import numpy as np
 import random
 from collections import namedtuple
 
+from torch.autograd import Variable
+
 from model import QNetwork
 
 import torch
@@ -48,10 +50,13 @@ class Agent:
 
     def step(self, state, action, reward, next_state, done):
         # Save experience in replay memory
-        best_action = self.qnetwork_local(next_state).detach().argmax(1).unsqueeze(1)
-        Q_expected = self.qnetwork_local(state).gather(1, action)
-        Q_target = reward + (GAMMA * self.qnetwork_target(next_state).detach().gather(1, best_action) * (1 - done))
-        error = torch.abs(Q_expected - Q_target)
+        next_state = torch.from_numpy(next_state).float().unsqueeze(0).to(device)
+        state = torch.from_numpy(state).float().unsqueeze(0).to(device)
+
+        best_action = np.argmax(self.qnetwork_local(next_state).cpu().data.numpy()[0])
+        Q_expected = self.qnetwork_local(state).cpu().data.numpy()[0][action]
+        Q_target = reward + (GAMMA * self.qnetwork_target(next_state).cpu().data.numpy()[0][best_action] * (1 - done))
+        error = np.abs(Q_expected - Q_target) + self.memory.epsilon
         self.memory.add(error, state, action, reward, next_state, done)
 
         # Learn every UPDATE_EVERY time steps.
@@ -100,8 +105,11 @@ class Agent:
         # Get expected Q values from local model
         Q_expected = self.qnetwork_local(states).gather(1, actions)
 
+        td_error = Q_targets - Q_expected
+
+        # TODO: Not sure about this
         # Compute loss
-        loss = F.mse_loss(Q_expected, Q_targets)
+        loss = i_s_weights * td_error * F.mse_loss(Q_expected, Q_targets)
 
         # TODO: Compute loss function
         # TODO: Use IS_weights to update tree
@@ -111,6 +119,10 @@ class Agent:
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
+
+        priority = torch.abs(td_error).cpu().data.numpy()
+        for index in indexes:
+            self.memory.update(index, priority[index] + self.memory.epsilon)
 
         # ------------------- update target network ------------------- #
         self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)
@@ -161,6 +173,9 @@ class PrioritizedExperienceReplayBuffer:
         experience = self.experience(state, action, reward, next_state, done)
         self.memory.add(self.compute_priority(error), experience)
 
+    def update(self, index, priority):
+        self.memory.update(index, priority)
+
     def sample(self):
         """
 
@@ -184,10 +199,10 @@ class PrioritizedExperienceReplayBuffer:
 
         sampling_probs = np.divide(priorities, self.memory.total())
         # importance sampling
-
-        # TODO: What to do with IS weight
         i_s_weights = (self.memory.count * sampling_probs) ** -self.beta
         i_s_weights /= np.max(i_s_weights)
+
+        # TODO: STOP HERE> Experiences populated wrongly?
 
         states = torch.from_numpy(np.vstack([e.state for e in experiences if e is not None])).float().to(device)
         actions = torch.from_numpy(np.vstack([e.action for e in experiences if e is not None])).long().to(device)
@@ -201,4 +216,4 @@ class PrioritizedExperienceReplayBuffer:
 
     def __len__(self):
         """Return the current size of internal memory."""
-        return len(self.memory.count)
+        return self.memory.count
