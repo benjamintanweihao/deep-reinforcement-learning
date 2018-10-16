@@ -2,8 +2,6 @@ import numpy as np
 import random
 from collections import namedtuple
 
-from torch.autograd import Variable
-
 from model import QNetwork
 
 import torch
@@ -107,22 +105,22 @@ class Agent:
 
         td_error = Q_targets - Q_expected
 
-        # TODO: Not sure about this
         # Compute loss
-        loss = i_s_weights * td_error * F.mse_loss(Q_expected, Q_targets)
-
-        # TODO: Compute loss function
-        # TODO: Use IS_weights to update tree
-        # TODO: Remember to add epsilon to absolute errors
+        # TODO: Need to figure this out
+        # loss = torch.sum(torch.mean(i_s_weights * torch.sum(td_error ** 2)))
+        loss = F.mse_loss(Q_expected, Q_targets)
 
         # Minimize the loss
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
 
-        priority = torch.abs(td_error).cpu().data.numpy()
-        for index in indexes:
-            self.memory.update(index, priority[index] + self.memory.epsilon)
+        abs_errors = torch.squeeze(torch.abs(td_error) + self.memory.epsilon)
+        priority = abs_errors.cpu().data.numpy()
+        print('Indexes:' + str(indexes))
+        print('Priority: ' + str(priority))
+        for i, index in enumerate(indexes):
+            self.memory.update(index, priority[i])
 
         # ------------------- update target network ------------------- #
         self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)
