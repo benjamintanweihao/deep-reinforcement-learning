@@ -107,8 +107,8 @@ class Agent:
 
         # Compute loss
         # TODO: Need to figure this out
-        # loss = torch.sum(torch.mean(i_s_weights * torch.sum(td_error ** 2)))
-        loss = F.mse_loss(Q_expected, Q_targets)
+        i_s_weights = torch.tensor(i_s_weights, dtype=torch.float).cuda()
+        loss = torch.sum(torch.mean(torch.sum((td_error ** 2).mul(i_s_weights))))
 
         # Minimize the loss
         self.optimizer.zero_grad()
@@ -117,7 +117,7 @@ class Agent:
 
         abs_errors = torch.squeeze(torch.abs(td_error) + self.memory.epsilon)
         priority = abs_errors.cpu().data.numpy()
-       for i, index in enumerate(indexes):
+        for i, index in enumerate(indexes):
             self.memory.update(index, priority[i])
 
         # ------------------- update target network ------------------- #
