@@ -117,9 +117,7 @@ class Agent:
 
         abs_errors = torch.squeeze(torch.abs(td_error) + self.memory.epsilon)
         priority = abs_errors.cpu().data.numpy()
-        print('Indexes:' + str(indexes))
-        print('Priority: ' + str(priority))
-        for i, index in enumerate(indexes):
+       for i, index in enumerate(indexes):
             self.memory.update(index, priority[i])
 
         # ------------------- update target network ------------------- #
