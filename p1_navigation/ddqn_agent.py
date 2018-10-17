@@ -87,7 +87,8 @@ class Agent:
         states, actions, rewards, next_states, dones = experiences
 
         # DDQN: Compute Q targets for current states 
-        best_actions = self.qnetwork_local(next_states).detach().argmax(1).unsqueeze(1)
+        best_actions = self.qnetwork_local(next_states).detach().max(1)[1].unsqueeze(1)
+
         Q_targets = rewards + (gamma * self.qnetwork_target(next_states).detach().gather(1, best_actions) * (1 - dones))
 
         # Get expected Q values from local model

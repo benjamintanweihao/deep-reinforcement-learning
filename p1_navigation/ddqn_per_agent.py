@@ -51,7 +51,7 @@ class Agent:
         next_state = torch.from_numpy(next_state).float().unsqueeze(0).to(device)
         state = torch.from_numpy(state).float().unsqueeze(0).to(device)
 
-        best_action = np.argmax(self.qnetwork_local(next_state).cpu().data.numpy()[0])
+        best_action = self.qnetwork_local(next_state).detach().max(1)[1].unsqueeze(1).cpu().data.numpy()[0]
         Q_expected = self.qnetwork_local(state).cpu().data.numpy()[0][action]
         Q_target = reward + (GAMMA * self.qnetwork_target(next_state).cpu().data.numpy()[0][best_action] * (1 - done))
         error = np.abs(Q_expected - Q_target) + self.memory.epsilon
@@ -97,7 +97,7 @@ class Agent:
         states, actions, rewards, next_states, dones = experiences
 
         # DDQN: Compute Q targets for current states
-        best_actions = self.qnetwork_local(next_states).detach().argmax(1).unsqueeze(1)
+        best_actions = self.qnetwork_local(next_states).detach().max(1)[1].unsqueeze(1)
         Q_targets = rewards + (gamma * self.qnetwork_target(next_states).detach().gather(1, best_actions) * (1 - dones))
 
         # Get expected Q values from local model
