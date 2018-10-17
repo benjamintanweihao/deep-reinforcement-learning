@@ -107,8 +107,9 @@ class Agent:
 
         # Compute loss
         # TODO: Need to figure this out
+        # self.loss = tf.reduce_mean(self.ISWeights * tf.squared_difference(self.q_target, self.q_eval))
         i_s_weights = torch.tensor(i_s_weights, dtype=torch.float).cuda()
-        loss = torch.sum(torch.mean(torch.sum((td_error ** 2).mul(i_s_weights))))
+        loss = torch.mean(i_s_weights * (td_error ** 2))
 
         # Minimize the loss
         self.optimizer.zero_grad()
@@ -116,9 +117,9 @@ class Agent:
         self.optimizer.step()
 
         abs_errors = torch.squeeze(torch.abs(td_error) + self.memory.epsilon)
-        priority = abs_errors.cpu().data.numpy()
-        for i, index in enumerate(indexes):
-            self.memory.update(index, priority[i])
+        priorities = abs_errors.cpu().data.numpy()
+        for index, priority in zip(indexes, priorities):
+            self.memory.update(index, priority)
 
         # ------------------- update target network ------------------- #
         self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)
@@ -197,8 +198,6 @@ class PrioritizedExperienceReplayBuffer:
         # importance sampling
         i_s_weights = (self.memory.count * sampling_probs) ** -self.beta
         i_s_weights /= np.max(i_s_weights)
-
-        # TODO: STOP HERE> Experiences populated wrongly?
 
         states = torch.from_numpy(np.vstack([e.state for e in experiences if e is not None])).float().to(device)
         actions = torch.from_numpy(np.vstack([e.action for e in experiences if e is not None])).long().to(device)
