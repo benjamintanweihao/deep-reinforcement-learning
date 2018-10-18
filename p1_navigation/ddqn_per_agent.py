@@ -109,7 +109,12 @@ class Agent:
         # TODO: Need to figure this out
         # self.loss = tf.reduce_mean(self.ISWeights * tf.squared_difference(self.q_target, self.q_eval))
         i_s_weights = torch.tensor(i_s_weights, dtype=torch.float).cuda()
-        loss = torch.mean(i_s_weights * (td_error ** 2))
+
+        # loss = torch.mean(i_s_weights * (td_error ** 2))
+
+        # TODO: Try this one out
+        loss = (torch.abs(td_error) * i_s_weights).mean()
+
 
         # Minimize the loss
         self.optimizer.zero_grad()
@@ -144,7 +149,7 @@ class PrioritizedExperienceReplayBuffer:
     alpha = 0.6
     beta = 0.4
     beta_increment_per_sample = 0.001
-    epsilon = 0.01
+    epsilon = 0.0001
 
     def __init__(self, action_size, buffer_size, batch_size, seed):
         """Initialize a ReplayBuffer object.
