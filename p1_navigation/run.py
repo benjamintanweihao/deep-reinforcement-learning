@@ -2,9 +2,9 @@ from unityagents import UnityEnvironment
 from collections import deque
 
 # Select which agent
-from dqn_agent import Agent
+# from dqn_agent import Agent
 # from ddqn_agent import Agent
-# from ddqn_per_agent import Agent
+from ddqn_per_agent import Agent
 
 import torch
 import numpy as np

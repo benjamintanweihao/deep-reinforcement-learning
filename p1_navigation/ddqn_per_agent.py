@@ -51,11 +51,9 @@ class Agent:
         next_state = torch.from_numpy(next_state).float().unsqueeze(0).to(device)
         state = torch.from_numpy(state).float().unsqueeze(0).to(device)
 
-        best_action = self.qnetwork_local(next_state).detach().max(1)[1].unsqueeze(1).cpu().data.numpy()[0]
-        Q_expected = self.qnetwork_local(state).cpu().data.numpy()[0][action]
-        Q_target = reward + (GAMMA * self.qnetwork_target(next_state).cpu().data.numpy()[0][best_action] * (1 - done))
-        error = np.abs(Q_expected - Q_target) + self.memory.epsilon
-        self.memory.add(error, state, action, reward, next_state, done)
+        # TODO: Check
+
+        self.memory.add(state, action, reward, next_state, done)
 
         # Learn every UPDATE_EVERY time steps.
         self.t_step = (self.t_step + 1) % UPDATE_EVERY
@@ -98,23 +96,16 @@ class Agent:
 
         # DDQN: Compute Q targets for current states
         best_actions = self.qnetwork_local(next_states).detach().max(1)[1].unsqueeze(1)
-        Q_targets = rewards + (gamma * self.qnetwork_target(next_states).detach().gather(1, best_actions) * (1 - dones))
+        q_targets = rewards + (gamma * self.qnetwork_target(next_states).detach().gather(1, best_actions) * (1 - dones))
 
         # Get expected Q values from local model
-        Q_expected = self.qnetwork_local(states).gather(1, actions)
+        q_expected = self.qnetwork_local(states).gather(1, actions)
 
-        td_error = Q_targets - Q_expected
+        td_error = q_targets - q_expected
 
         # Compute loss
-        # TODO: Need to figure this out
-        # self.loss = tf.reduce_mean(self.ISWeights * tf.squared_difference(self.q_target, self.q_eval))
         i_s_weights = torch.tensor(i_s_weights, dtype=torch.float).cuda()
-
-        # loss = torch.mean(i_s_weights * (td_error ** 2))
-
-        # TODO: Try this one out
         loss = (torch.abs(td_error) * i_s_weights).mean()
-
 
         # Minimize the loss
         self.optimizer.zero_grad()
@@ -167,13 +158,17 @@ class PrioritizedExperienceReplayBuffer:
         self.experience = namedtuple("Experience", field_names=["state", "action", "reward", "next_state", "done"])
         self.seed = random.seed(seed)
 
-    def compute_priority(self, error):
-        return (error + self.epsilon) ** self.alpha
+    def compute_priority(self, td_error):
+        return (td_error + self.epsilon) ** self.alpha
 
-    def add(self, error, state, action, reward, next_state, done):
+    def add(self, state, action, reward, next_state, done):
         """Add a new experience to memory."""
         experience = self.experience(state, action, reward, next_state, done)
-        self.memory.add(self.compute_priority(error), experience)
+        max_priority = np.max(self.memory.tree[-self.memory.capacity:])
+        if max_priority == 0:
+            max_priority = 1.
+
+        self.memory.add(max_priority, experience)
 
     def update(self, index, priority):
         self.memory.update(index, priority)
@@ -201,6 +196,7 @@ class PrioritizedExperienceReplayBuffer:
 
         sampling_probs = np.divide(priorities, self.memory.total())
         # importance sampling
+        # TODO: memory count or batch size???
         i_s_weights = (self.memory.count * sampling_probs) ** -self.beta
         i_s_weights /= np.max(i_s_weights)
 
