@@ -18,10 +18,13 @@ args = vars(parser.parse_args())
 # Select which agent
 if args['agent'] == 'dqn':
     from dqn_agent import Agent
+    checkpoint_file_name = 'checkpoint-dqn.pth'
 elif args['agent'] == 'ddqn':
     from ddqn_agent import Agent
+    checkpoint_file_name = 'checkpoint-ddqn.pth'
 elif args['agent'] == 'per':
     from ddqn_per_agent import Agent
+    checkpoint_file_name = 'checkpoint-per.pth'
 else:
     pass
 
@@ -89,7 +92,7 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
         if np.mean(scores_window) >= 13.0:
             print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(i_episode - 100,
                                                                                          np.mean(scores_window)))
-            torch.save(agent.qnetwork_local.state_dict(), 'checkpoint.pth')
+            torch.save(agent.qnetwork_local.state_dict(), checkpoint_file_name)
             break
     return scores
 
@@ -104,7 +107,7 @@ plt.ylabel('Score')
 plt.xlabel('Episode #')
 plt.show()
 
-agent.qnetwork_local.load_state_dict(torch.load('checkpoint.pth'))
+agent.qnetwork_local.load_state_dict(torch.load(checkpoint_file_name))
 
 scores = []
 
