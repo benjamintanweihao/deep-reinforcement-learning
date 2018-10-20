@@ -51,8 +51,6 @@ class Agent:
         next_state = torch.from_numpy(next_state).float().unsqueeze(0).to(device)
         state = torch.from_numpy(state).float().unsqueeze(0).to(device)
 
-        # TODO: Check
-
         self.memory.add(state, action, reward, next_state, done)
 
         # Learn every UPDATE_EVERY time steps.
@@ -83,12 +81,13 @@ class Agent:
         else:
             return random.choice(np.arange(self.action_size))
 
-    # TODO: Update params
     def learn(self, i_s_weights, indexes, experiences, gamma):
         """Update value parameters using given batch of experience tuples.
 
         Params
         ======
+            i_s_weights: Importance sampling weights
+            indexes: Indices of chosen samples
             experiences (Tuple[torch.Tensor]): tuple of (s, a, r, s', done) tuples
             gamma (float): discount factor
         """
@@ -106,16 +105,16 @@ class Agent:
         # Compute loss
         i_s_weights = torch.tensor(i_s_weights, dtype=torch.float).cuda()
         loss = (torch.abs(td_error) * i_s_weights).mean()
+        # loss = F.mse_loss(q_expected * i_s_weights, q_targets * i_s_weights)
 
         # Minimize the loss
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
 
-        abs_errors = torch.squeeze(torch.abs(td_error) + self.memory.epsilon)
-        priorities = abs_errors.cpu().data.numpy()
-        for index, priority in zip(indexes, priorities):
-            self.memory.update(index, priority)
+        abs_errors = torch.squeeze(torch.abs(td_error)).cpu().data.numpy()
+        for index, abs_error in zip(indexes, abs_errors):
+            self.memory.update(index, abs_error)
 
         # ------------------- update target network ------------------- #
         self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)
@@ -140,7 +139,7 @@ class PrioritizedExperienceReplayBuffer:
     alpha = 0.6
     beta = 0.4
     beta_increment_per_sample = 0.001
-    epsilon = 0.0001
+    epsilon = 1e-6
 
     def __init__(self, action_size, buffer_size, batch_size, seed):
         """Initialize a ReplayBuffer object.
@@ -170,7 +169,8 @@ class PrioritizedExperienceReplayBuffer:
 
         self.memory.add(max_priority, experience)
 
-    def update(self, index, priority):
+    def update(self, index, td_error):
+        priority = self.compute_priority(td_error)
         self.memory.update(index, priority)
 
     def sample(self):
@@ -185,6 +185,7 @@ class PrioritizedExperienceReplayBuffer:
         experiences = []
 
         for i in range(self.batch_size):
+            # pick a segment
             a = segment * i
             b = segment * (i + 1)
             s = np.random.uniform(a, b)
@@ -196,8 +197,7 @@ class PrioritizedExperienceReplayBuffer:
 
         sampling_probs = np.divide(priorities, self.memory.total())
         # importance sampling
-        # TODO: memory count or batch size???
-        i_s_weights = (self.memory.count * sampling_probs) ** -self.beta
+        i_s_weights = (self.batch_size * sampling_probs) ** -self.beta
         i_s_weights /= np.max(i_s_weights)
 
         states = torch.from_numpy(np.vstack([e.state for e in experiences if e is not None])).float().to(device)

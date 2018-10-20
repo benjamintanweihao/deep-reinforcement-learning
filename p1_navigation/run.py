@@ -1,16 +1,30 @@
+import argparse
+
 from unityagents import UnityEnvironment
 from collections import deque
-
-# Select which agent
-# from dqn_agent import Agent
-# from ddqn_agent import Agent
-from ddqn_per_agent import Agent
 
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
 
 env = UnityEnvironment(file_name="/home/benjamintan/workspace/deep-reinforcement-learning/p1_navigation/Banana_Linux/Banana.x86_64")
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--agent',
+                    help='Select agent. [dqn | ddqn | per]',
+                    required=True)
+args = vars(parser.parse_args())
+
+# Select which agent
+if args['agent'] == 'dqn':
+    from dqn_agent import Agent
+elif args['agent'] == 'ddqn':
+    from ddqn_agent import Agent
+elif args['agent'] == 'per':
+    from ddqn_per_agent import Agent
+else:
+    pass
+
 
 # get the default brain
 brain_name = env.brain_names[0]

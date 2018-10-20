@@ -23,10 +23,11 @@ class SumTree:
 
         # sum tree is full, reset point back to 0
         # (overwrites previous entries)
-
-        self.count += 1
         if self.ptr >= self.capacity:
             self.ptr = 0
+
+        if self.count < self.capacity:
+            self.count += 1
 
     def get(self, s):
         # start the search from the root
