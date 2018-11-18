@@ -20,6 +20,7 @@ def init_environment_and_agent():
     env_info = env.reset(train_mode=True)[brain_name]
 
     # number of agents
+    .0.
     num_agents = len(env_info.agents)
     print('Number of agents: {}'.format(num_agents))
 
