@@ -2,6 +2,7 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 import random
+import tqdm
 
 from unityagents import UnityEnvironment
 from collections import deque
@@ -33,14 +34,15 @@ def init_environment_and_agent():
     print('There are {} agents. Each observes a state with length: {}'.format(states.shape[0], state_size))
     # print('The state for the first agent looks like: {}'.format(state[0]))
 
-    seed = random.randint(0, 1000)
+    # seed = random.randint(0, 1000)
+    seed = 810
     print('Using random seed: {}'.format(seed))
     agent = Agent(state_size=state_size, action_size=action_size, random_seed=seed)
 
     return env, agent
 
 
-def ddpg(env, agent, n_episodes=2000, max_t=1000, goal_score=30, learn_every=20, num_learn=10):
+def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=30, learn_every=20, num_learn=10):
     brain_name = env.brain_names[0]
     total_scores_deque = deque(maxlen=100)
     total_scores = []
@@ -53,7 +55,7 @@ def ddpg(env, agent, n_episodes=2000, max_t=1000, goal_score=30, learn_every=20,
 
         agent.reset()
 
-        for t in range(max_t):
+        for t in tqdm.tqdm(range(max_t), leave=False):
             actions = agent.act(states)
             env_info = env.step(actions)[brain_name]
             next_states = env_info.vector_observations
@@ -88,6 +90,11 @@ def ddpg(env, agent, n_episodes=2000, max_t=1000, goal_score=30, learn_every=20,
             torch.save(agent.critic_local.state_dict(), 'checkpoint_critic.pth')
             print('Woot! Solved after {} episodes. Total average score: {}'.format(
                 i_episode, total_average_score))
+
+        if i_episode % 10 == 0:
+            torch.save(agent.actor_local.state_dict(), 'checkpoint_actor.pth')
+            torch.save(agent.critic_local.state_dict(), 'checkpoint_critic.pth')
+            print('Saving Episode: {}.'.format(i_episode))
 
     return total_scores
 
