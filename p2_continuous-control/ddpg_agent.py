@@ -19,7 +19,7 @@ WEIGHT_DECAY = 0.000  # L2 weight decay
 
 cuda_available = torch.cuda.is_available()
 assert cuda_available, 'CUDA not available. Impossible!'
-device = torch.device("cuda:0" if cuda_available else "cpu")
+device = torch.device("cuda:2" if cuda_available else "cpu")
 
 
 class Agent:

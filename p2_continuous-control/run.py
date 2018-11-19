@@ -8,9 +8,12 @@ from unityagents import UnityEnvironment
 from collections import deque
 from ddpg_agent import Agent
 
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+
 
 def init_environment_and_agent():
-    env = UnityEnvironment(file_name='Reacher_Linux_Multiple/Reacher.x86_64', no_graphics=True)
+    env = UnityEnvironment(file_name='Reacher_Linux/Reacher.x86_64', no_graphics=True)
 
     # get the default brain
     brain_name = env.brain_names[0]
@@ -20,7 +23,6 @@ def init_environment_and_agent():
     env_info = env.reset(train_mode=True)[brain_name]
 
     # number of agents
-    .0.
     num_agents = len(env_info.agents)
     print('Number of agents: {}'.format(num_agents))
 
@@ -43,7 +45,7 @@ def init_environment_and_agent():
     return env, agent
 
 
-def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=30, learn_every=20, num_learn=10):
+def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=30, learn_every=50, num_learn=10):
     brain_name = env.brain_names[0]
     total_scores_deque = deque(maxlen=100)
     total_scores = []
