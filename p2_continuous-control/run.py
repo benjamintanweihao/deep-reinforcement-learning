@@ -8,12 +8,12 @@ from unityagents import UnityEnvironment
 from collections import deque
 from ddpg_agent import Agent
 
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+TRAIN = True
+TEST = True
 
 
 def init_environment_and_agent():
-    env = UnityEnvironment(file_name='Reacher_Linux/Reacher.x86_64', no_graphics=True)
+    env = UnityEnvironment(file_name='Reacher_Linux/Reacher.x86_64', no_graphics=False)
 
     # get the default brain
     brain_name = env.brain_names[0]
@@ -104,8 +104,8 @@ def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=30, learn_every=50,
 
 
 def ddpg_test(env, agent):
-    agent.actor_local.load_state_dict(torch.load('checkpoint_actor.pth'))
-    agent.critic_local.load_state_dict(torch.load('checkpoint_critic.pth'))
+    agent.actor_local.load_state_dict(torch.load('checkpoint_actor.pth', map_location='cpu'))
+    agent.critic_local.load_state_dict(torch.load('checkpoint_critic.pth', map_location='cpu'))
 
     brain_name = env.brain_names[0]
     env_info = env.reset(train_mode=False)[brain_name]
@@ -134,14 +134,16 @@ def ddpg_test(env, agent):
     return
 
 
-env_, agent_ = init_environment_and_agent()
-scores = ddpg(env_, agent_)
-fig = plt.figure()
-ax = fig.add_subplot(111)
-plt.plot(np.arange(1, len(scores) + 1), scores)
-plt.ylabel('Score')
-plt.xlabel('Episode #')
-plt.show()
+if TRAIN:
+    env_, agent_ = init_environment_and_agent()
+    scores = ddpg(env_, agent_)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    plt.plot(np.arange(1, len(scores) + 1), scores)
+    plt.ylabel('Score')
+    plt.xlabel('Episode #')
+    plt.show()
 
-# Run the test
-ddpg_test(env_, agent_)
+if TEST:
+    # Run the test
+    ddpg_test(env_, agent_)
