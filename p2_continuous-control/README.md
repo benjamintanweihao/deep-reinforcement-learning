@@ -64,6 +64,18 @@ The environment is considered solved, when the average (over 100 episodes) of th
 
 ### Instructions
 
+#### Setting Up
+
+In addition to the dependencies outlined by the parent repository, this project also uses `tqdm`.
+
+In the Conda environment, do:
+
+```
+% pip install tqdm
+```
+
+#### Running the Project
+
 To train the agent from scratch:
 
 ```
