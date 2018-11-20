@@ -37,8 +37,7 @@ def init_environment_and_agent():
     print('There are {} agents. Each observes a state with length: {}'.format(states.shape[0], state_size))
     # print('The state for the first agent looks like: {}'.format(state[0]))
 
-    # seed = random.randint(0, 1000)
-    seed = 810
+    seed = random.randint(0, 1000)
     print('Using random seed: {}'.format(seed))
     agent = Agent(state_size=state_size, action_size=action_size, random_seed=seed)
 
@@ -93,6 +92,8 @@ def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=30, learn_every=50,
             torch.save(agent.critic_local.state_dict(), 'checkpoint_critic.pth')
             print('Woot! Solved after {} episodes. Total average score: {}'.format(
                 i_episode, total_average_score))
+
+            break
 
         if i_episode % 10 == 0:
             torch.save(agent.actor_local.state_dict(), 'checkpoint_actor.pth')

@@ -104,3 +104,5 @@ ENV/
 .mypy_cache/
 
 Banana_Linux
+Reacher_Linux
+.idea

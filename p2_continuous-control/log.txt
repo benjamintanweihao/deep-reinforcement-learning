@@ -1,0 +1,206 @@
+/home/benjamintan/miniconda3/envs/drlnd/bin/python /home/benjamintan/workspace/deep-reinforcement-learning/p2_continuous-control/run.py
+Found path: /home/benjamintan/workspace/deep-reinforcement-learning/p2_continuous-control/Reacher_Linux/Reacher.x86_64
+Mono path[0] = '/home/benjamintan/workspace/deep-reinforcement-learning/p2_continuous-control/Reacher_Linux/Reacher_Data/Managed'
+Mono config path = '/home/benjamintan/workspace/deep-reinforcement-learning/p2_continuous-control/Reacher_Linux/Reacher_Data/MonoBleedingEdge/etc'
+Preloaded 'ScreenSelector.so'
+Preloaded 'libgrpc_csharp_ext.x64.so'
+Unable to preload the following plugins:
+	ScreenSelector.so
+	libgrpc_csharp_ext.x86.so
+Logging to /home/benjamintan/.config/unity3d/Unity Technologies/Unity Environment/Player.log
+INFO:unityagents:
+'Academy' started successfully!
+Unity Academy name: Academy
+        Number of Brains: 1
+        Number of External Brains : 1
+        Lesson number : 0
+        Reset Parameters :
+		goal_speed -> 1.0
+		goal_size -> 5.0
+Unity brain name: ReacherBrain
+        Number of Visual Observations (per agent): 0
+        Vector Observation space type: continuous
+        Vector Observation space size (per agent): 33
+        Number of stacked Vector Observation: 1
+        Vector Action space type: continuous
+        Vector Action space size (per agent): 4
+        Vector Action descriptions: , , ,
+Number of agents: 20
+Size of each action 4
+There are 20 agents. Each observes a state with length: 33
+Using random seed: 138
+Episode 1	Average: 0.45	Min: 0.00	Max: 1.43
+Episode 2	Average: 0.54	Min: 0.09	Max: 2.27
+Episode 3	Average: 0.61	Min: 0.08	Max: 2.61
+Episode 4	Average: 0.80	Min: 0.48	Max: 3.44
+Episode 5	Average: 0.95	Min: 0.81	Max: 3.38
+Episode 6	Average: 1.14	Min: 0.80	Max: 3.84
+Episode 7	Average: 1.32	Min: 0.62	Max: 3.77
+Episode 8	Average: 1.45	Min: 1.42	Max: 3.71
+Episode 9	Average: 1.60	Min: 1.41	Max: 4.94
+Episode 10	Average: 1.73	Min: 1.35	Max: 4.42
+Saving Episode: 10.
+Episode 11	Average: 1.91	Min: 1.21	Max: 7.18
+Episode 12	Average: 2.04	Min: 0.56	Max: 5.96
+Episode 13	Average: 2.19	Min: 1.69	Max: 8.87
+Episode 14	Average: 2.38	Min: 1.60	Max: 10.82
+Episode 15	Average: 2.55	Min: 1.86	Max: 6.81
+Episode 16	Average: 2.70	Min: 2.81	Max: 8.27
+Episode 17	Average: 2.96	Min: 2.88	Max: 13.51
+Episode 18	Average: 3.17	Min: 4.12	Max: 9.65
+Episode 19	Average: 3.41	Min: 2.30	Max: 11.31
+Episode 20	Average: 3.59	Min: 4.05	Max: 12.62
+Saving Episode: 20.
+Episode 21	Average: 3.84	Min: 5.67	Max: 18.26
+Episode 22	Average: 4.01	Min: 4.29	Max: 12.93
+Episode 23	Average: 4.22	Min: 5.15	Max: 25.52
+Episode 24	Average: 4.38	Min: 5.10	Max: 10.26
+Episode 25	Average: 4.55	Min: 5.04	Max: 11.84
+Episode 26	Average: 4.71	Min: 2.95	Max: 12.20
+Episode 27	Average: 4.88	Min: 2.06	Max: 17.60
+Episode 28	Average: 5.01	Min: 3.80	Max: 11.11
+Episode 29	Average: 5.17	Min: 4.54	Max: 14.21
+Episode 30	Average: 5.31	Min: 6.01	Max: 26.78
+Saving Episode: 30.
+Episode 31	Average: 5.53	Min: 3.82	Max: 28.68
+Episode 32	Average: 5.71	Min: 4.59	Max: 28.60
+Episode 33	Average: 5.91	Min: 7.18	Max: 19.53
+Episode 34	Average: 6.15	Min: 9.80	Max: 24.78
+Episode 35	Average: 6.35	Min: 8.40	Max: 18.11
+Episode 36	Average: 6.52	Min: 8.02	Max: 17.52
+Episode 37	Average: 6.70	Min: 8.99	Max: 22.51
+Episode 38	Average: 6.88	Min: 9.08	Max: 18.24
+Episode 39	Average: 7.03	Min: 9.86	Max: 15.28
+Episode 40	Average: 7.21	Min: 9.73	Max: 21.20
+Saving Episode: 40.
+Episode 41	Average: 7.41	Min: 10.06	Max: 35.61
+Episode 42	Average: 7.58	Min: 5.48	Max: 22.15
+Episode 43	Average: 7.81	Min: 8.35	Max: 29.83
+Episode 44	Average: 8.00	Min: 10.55	Max: 27.22
+Episode 45	Average: 8.24	Min: 11.49	Max: 28.02
+Episode 46	Average: 8.43	Min: 10.71	Max: 23.31
+Episode 47	Average: 8.64	Min: 5.59	Max: 30.18
+Episode 48	Average: 8.87	Min: 14.77	Max: 36.81
+Episode 49	Average: 9.05	Min: 12.79	Max: 27.42
+Episode 50	Average: 9.26	Min: 15.27	Max: 29.06
+Saving Episode: 50.
+Episode 51	Average: 9.46	Min: 12.84	Max: 26.98
+Episode 52	Average: 9.71	Min: 15.23	Max: 39.20
+Episode 53	Average: 9.94	Min: 16.38	Max: 28.83
+Episode 54	Average: 10.18	Min: 13.75	Max: 34.51
+Episode 55	Average: 10.44	Min: 18.17	Max: 29.58
+Episode 56	Average: 10.71	Min: 13.38	Max: 30.58
+Episode 57	Average: 10.88	Min: 13.34	Max: 31.75
+Episode 58	Average: 11.11	Min: 16.69	Max: 34.54
+Episode 59	Average: 11.33	Min: 16.93	Max: 32.40
+Episode 60	Average: 11.59	Min: 13.82	Max: 35.71
+Saving Episode: 60.
+Episode 61	Average: 11.85	Min: 18.80	Max: 37.88
+Episode 62	Average: 12.07	Min: 17.12	Max: 32.29
+Episode 63	Average: 12.30	Min: 6.95	Max: 37.79
+Episode 64	Average: 12.52	Min: 16.67	Max: 33.88
+Episode 65	Average: 12.76	Min: 19.54	Max: 35.68
+Episode 66	Average: 12.99	Min: 17.78	Max: 34.12
+Episode 67	Average: 13.21	Min: 16.51	Max: 33.90
+Episode 68	Average: 13.39	Min: 17.34	Max: 31.87
+Episode 69	Average: 13.60	Min: 13.97	Max: 32.90
+Episode 70	Average: 13.82	Min: 17.17	Max: 36.64
+Saving Episode: 70.
+Episode 71	Average: 14.06	Min: 19.45	Max: 36.79
+Episode 72	Average: 14.28	Min: 19.97	Max: 38.45
+Episode 73	Average: 14.48	Min: 20.28	Max: 35.81
+Episode 74	Average: 14.69	Min: 23.72	Max: 35.29
+Episode 75	Average: 14.89	Min: 23.67	Max: 36.57
+Episode 76	Average: 15.09	Min: 22.21	Max: 36.28
+Episode 77	Average: 15.32	Min: 24.87	Max: 39.17
+Episode 78	Average: 15.52	Min: 20.64	Max: 39.61
+Episode 79	Average: 15.72	Min: 24.58	Max: 36.64
+Episode 80	Average: 15.90	Min: 24.24	Max: 35.04
+Saving Episode: 80.
+Episode 81	Average: 16.10	Min: 23.69	Max: 39.05
+Episode 82	Average: 16.27	Min: 24.73	Max: 35.10
+Episode 83	Average: 16.46	Min: 27.94	Max: 36.22
+Episode 84	Average: 16.64	Min: 28.40	Max: 35.80
+Episode 85	Average: 16.82	Min: 24.11	Max: 35.86
+Episode 86	Average: 17.01	Min: 26.92	Max: 36.80
+Episode 87	Average: 17.16	Min: 21.63	Max: 35.59
+Episode 88	Average: 17.33	Min: 29.73	Max: 34.76
+Episode 89	Average: 17.49	Min: 25.54	Max: 35.28
+Episode 90	Average: 17.65	Min: 27.94	Max: 34.72
+Saving Episode: 90.
+Episode 91	Average: 17.78	Min: 22.67	Max: 33.79
+Episode 92	Average: 17.93	Min: 21.10	Max: 36.00
+Episode 93	Average: 18.08	Min: 27.92	Max: 36.88
+Episode 94	Average: 18.22	Min: 27.91	Max: 34.99
+Episode 95	Average: 18.34	Min: 23.67	Max: 33.35
+Episode 96	Average: 18.49	Min: 26.87	Max: 37.71
+Episode 97	Average: 18.61	Min: 25.99	Max: 34.45
+Episode 98	Average: 18.73	Min: 25.79	Max: 35.76
+Episode 99	Average: 18.85	Min: 26.03	Max: 34.40
+Episode 100	Average: 18.98	Min: 24.68	Max: 37.00
+Saving Episode: 100.
+Episode 101	Average: 19.28	Min: 22.73	Max: 34.24
+Episode 102	Average: 19.61	Min: 28.71	Max: 38.30
+Episode 103	Average: 19.91	Min: 22.09	Max: 37.39
+Episode 104	Average: 20.21	Min: 24.44	Max: 36.31
+Episode 105	Average: 20.53	Min: 29.52	Max: 37.65
+Episode 106	Average: 20.84	Min: 25.48	Max: 36.49
+Episode 107	Average: 21.15	Min: 28.55	Max: 36.96
+Episode 108	Average: 21.45	Min: 28.13	Max: 36.03
+Episode 109	Average: 21.73	Min: 28.05	Max: 35.45
+Episode 110	Average: 22.02	Min: 26.39	Max: 39.08
+Saving Episode: 110.
+Episode 111	Average: 22.29	Min: 24.55	Max: 34.04
+Episode 112	Average: 22.57	Min: 26.62	Max: 33.65
+Episode 113	Average: 22.83	Min: 24.59	Max: 33.56
+Episode 114	Average: 23.10	Min: 23.95	Max: 35.13
+Episode 115	Average: 23.35	Min: 26.78	Max: 34.62
+Episode 116	Average: 23.62	Min: 24.61	Max: 38.06
+Episode 117	Average: 23.83	Min: 22.29	Max: 32.86
+Episode 118	Average: 24.06	Min: 23.66	Max: 34.30
+Episode 119	Average: 24.28	Min: 21.63	Max: 38.77
+Episode 120	Average: 24.51	Min: 23.39	Max: 36.59
+Saving Episode: 120.
+Episode 121	Average: 24.72	Min: 22.99	Max: 39.05
+Episode 122	Average: 24.96	Min: 27.39	Max: 36.43
+Episode 123	Average: 25.18	Min: 26.24	Max: 34.90
+Episode 124	Average: 25.41	Min: 26.46	Max: 39.50
+Episode 125	Average: 25.67	Min: 31.50	Max: 37.96
+Episode 126	Average: 25.91	Min: 27.88	Max: 36.35
+Episode 127	Average: 26.14	Min: 26.38	Max: 35.36
+Episode 128	Average: 26.36	Min: 25.97	Max: 36.12
+Episode 129	Average: 26.57	Min: 24.69	Max: 34.28
+Episode 130	Average: 26.79	Min: 26.10	Max: 34.89
+Saving Episode: 130.
+Episode 131	Average: 26.94	Min: 18.92	Max: 32.28
+Episode 132	Average: 27.12	Min: 21.69	Max: 34.87
+Episode 133	Average: 27.28	Min: 20.90	Max: 35.94
+Episode 134	Average: 27.44	Min: 23.58	Max: 34.57
+Episode 135	Average: 27.60	Min: 24.89	Max: 33.63
+Episode 136	Average: 27.77	Min: 23.15	Max: 33.41
+Episode 137	Average: 27.94	Min: 24.17	Max: 35.72
+Episode 138	Average: 28.09	Min: 21.80	Max: 33.81
+Episode 139	Average: 28.27	Min: 23.77	Max: 34.36
+Episode 140	Average: 28.42	Min: 24.72	Max: 34.60
+Saving Episode: 140.
+Episode 141	Average: 28.54	Min: 21.98	Max: 33.51
+Episode 142	Average: 28.66	Min: 23.54	Max: 31.68
+Episode 143	Average: 28.79	Min: 23.95	Max: 35.24
+Episode 144	Average: 28.92	Min: 23.80	Max: 33.05
+Episode 145	Average: 29.03	Min: 24.22	Max: 34.90
+Episode 146	Average: 29.16	Min: 21.50	Max: 36.37
+Episode 147	Average: 29.25	Min: 21.64	Max: 31.74
+Episode 148	Average: 29.35	Min: 21.25	Max: 34.93
+Episode 149	Average: 29.45	Min: 24.92	Max: 32.69
+Episode 150	Average: 29.56	Min: 24.84	Max: 35.55
+Saving Episode: 150.
+Episode 151	Average: 29.65	Min: 20.81	Max: 37.53
+Episode 152	Average: 29.71	Min: 20.93	Max: 32.38
+Episode 153	Average: 29.76	Min: 20.61	Max: 30.61
+Episode 154	Average: 29.82	Min: 23.60	Max: 33.33
+Episode 155	Average: 29.85	Min: 19.87	Max: 33.07
+Episode 156	Average: 29.89	Min: 23.33	Max: 31.97
+Episode 157	Average: 29.99	Min: 23.53	Max: 34.82
+Episode 158	Average: 30.03	Min: 23.26	Max: 32.39
+Woot! Solved after 158 episodes. Total average score: 30.03125432874914
+Total Score: 38.166499146912244
