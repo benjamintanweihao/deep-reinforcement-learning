@@ -59,7 +59,7 @@ class Agent:
         """Save experience in replay memory, and use random sample from buffer to learn."""
         # Save experience / reward
         for i in range(self.num_agents):
-            self.memory.add(state[i, :], action[i, :], reward[i, :], next_state[i, :], done[i, :])
+            self.memory.add(state[i, :], action[i, :], reward[i], next_state[i, :], done[i])
 
     def step_learn(self, num_steps):
         # Learn, if enough samples are available in memory
@@ -76,7 +76,7 @@ class Agent:
         self.actor_local.eval()
         with torch.no_grad():
             for i, state in enumerate(states):
-                action = self.actor_local(states).cpu().data.numpy()
+                action = self.actor_local(state).cpu().data.numpy()
                 actions[i, :] = action
 
         self.actor_local.train()

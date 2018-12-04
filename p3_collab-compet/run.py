@@ -14,7 +14,7 @@ TEST = True
 
 
 def init_environment_and_agent():
-    env = UnityEnvironment(file_name='Tennis_Linux/Tennis.x86_64', no_graphics=False)
+    env = UnityEnvironment(file_name='Tennis_Linux/Tennis.x86_64', no_graphics=True)
 
     # get the default brain
     brain_name = env.brain_names[0]
@@ -40,7 +40,7 @@ def init_environment_and_agent():
 
     seed = random.randint(0, 1000)
     print('Using random seed: {}'.format(seed))
-    agent = Agent(state_size=state_size, action_size=action_size, random_seed=seed)
+    agent = Agent(state_size=state_size, action_size=action_size, random_seed=seed, num_agents=num_agents)
 
     return env, agent
 
@@ -97,8 +97,7 @@ def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=0.5, learn_every=50
             rewards = env_info.rewards
             dones = env_info.local_done
 
-            for state, action, reward, next_state, done in zip(states, actions, rewards, next_states, dones):
-                agent.step(state, action, reward, next_state, done)
+            agent.step(states, actions, rewards, next_states, dones)
 
             states = next_states
             scores += env_info.rewards
