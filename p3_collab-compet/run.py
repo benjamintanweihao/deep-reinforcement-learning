@@ -8,10 +8,9 @@ from unityagents import UnityEnvironment
 from collections import deque
 from ddpg_agent import Agent
 
-# TODO: Change this when done
-RANDOM = True
-TRAIN = False
-TEST = False
+RANDOM = False
+TRAIN = True
+TEST = True
 
 
 def init_environment_and_agent():
@@ -78,7 +77,7 @@ def random_agent(env):
     env.close()
 
 
-def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=30, learn_every=50, num_learn=10):
+def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=0.5, learn_every=50, num_learn=10):
     brain_name = env.brain_names[0]
     total_scores_deque = deque(maxlen=100)
     total_scores = []
@@ -171,7 +170,6 @@ def ddpg_test(env, agent):
 if RANDOM:
     env_, agent_ = init_environment_and_agent()
     random_agent(env_)
-
 
 if TRAIN:
     env_, agent_ = init_environment_and_agent()
