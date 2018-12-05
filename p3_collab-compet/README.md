@@ -25,9 +25,7 @@ The environment is considered solved, when the average (over 100 episodes) of th
 
 ### Getting Started
 
-### Instructions
-
-##### Dependencies
+#### Dependencies
 
 1. To set up your python environment to run the code in this repository, follow the instructions [here](https://github.com/udacity/deep-reinforcement-learning#dependencies).
 	
