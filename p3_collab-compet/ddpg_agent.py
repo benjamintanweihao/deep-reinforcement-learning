@@ -10,11 +10,11 @@ import torch.nn.functional as F
 import torch.optim as optim
 
 BUFFER_SIZE = int(1e6)  # replay buffer size
-BATCH_SIZE = 512  # mini-batch size
+BATCH_SIZE = 256  # mini-batch size
 GAMMA = 0.99  # discount factor
 TAU = 1e-3  # for soft update of target parameters
-LR_ACTOR = 1e-4  # learning rate of the actor
-LR_CRITIC = 3e-4  # learning rate of the critic
+LR_ACTOR = 2e-4  # learning rate of the actor
+LR_CRITIC = 2e-4  # learning rate of the critic
 WEIGHT_DECAY = 0.000  # L2 weight decay
 
 cuda_available = torch.cuda.is_available()
@@ -61,10 +61,9 @@ class Agent:
         for i in range(self.num_agents):
             self.memory.add(state[i, :], action[i, :], reward[i], next_state[i, :], done[i])
 
-    def step_learn(self, num_steps):
         # Learn, if enough samples are available in memory
         if len(self.memory) > BATCH_SIZE:
-            for _ in range(num_steps * self.num_agents):
+            for _ in range(self.num_agents):
                 experiences = self.memory.sample()
                 self.learn(experiences, GAMMA)
 
@@ -72,8 +71,8 @@ class Agent:
         """Returns actions for given state as per current policy."""
         states = torch.from_numpy(states).float().to(device)
         actions = np.zeros((self.num_agents, self.action_size))
-
         self.actor_local.eval()
+
         with torch.no_grad():
             for i, state in enumerate(states):
                 action = self.actor_local(state).cpu().data.numpy()
@@ -151,6 +150,7 @@ class OUNoise:
         self.theta = theta
         self.sigma = sigma
         self.seed = random.seed(seed)
+        self.size = size
         self.state = None
         self.reset()
 
@@ -161,7 +161,7 @@ class OUNoise:
     def sample(self):
         """Update internal state and return it as a noise sample."""
         x = self.state
-        dx = self.theta * (self.mu - x) + self.sigma * np.array([random.random() for i in range(len(x))])
+        dx = self.theta * (self.mu - x) + self.sigma * np.random.standard_normal(self.size)
         self.state = x + dx
         return self.state
 

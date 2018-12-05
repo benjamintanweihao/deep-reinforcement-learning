@@ -44,7 +44,7 @@ def init_environment_and_agent():
     return env, agent
 
 
-def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=30, learn_every=50, num_learn=10):
+def ddpg(env, agent, n_episodes=5000, max_t=1000, goal_score=30, learn_every=50, num_learn=10):
     brain_name = env.brain_names[0]
     total_scores_deque = deque(maxlen=100)
     total_scores = []

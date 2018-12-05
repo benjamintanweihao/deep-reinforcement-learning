@@ -1,8 +1,6 @@
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
-import random
-import tqdm
 
 from unityagents import UnityEnvironment
 from collections import deque
@@ -14,7 +12,7 @@ TEST = True
 
 
 def init_environment_and_agent():
-    env = UnityEnvironment(file_name='Tennis_Linux/Tennis.x86_64', no_graphics=True)
+    env = UnityEnvironment(file_name='Tennis_Linux/Tennis.x86_64', no_graphics=False)
 
     # get the default brain
     brain_name = env.brain_names[0]
@@ -26,6 +24,7 @@ def init_environment_and_agent():
     # number of agents
     num_agents = len(env_info.agents)
     print('Number of agents: {}'.format(num_agents))
+    assert num_agents == 2, 'Expected 2 agents'
 
     # size of each action
     action_size = brain.vector_action_space_size
@@ -38,9 +37,13 @@ def init_environment_and_agent():
     print('There are {} agents. Each observes a state with length: {}'.format(states.shape[0], state_size))
     # print('The state for the first agent looks like: {}'.format(state[0]))
 
-    seed = random.randint(0, 1000)
+    # seed = random.randint(0, 1000)
+    seed = 0
     print('Using random seed: {}'.format(seed))
-    agent = Agent(state_size=state_size, action_size=action_size, random_seed=seed, num_agents=num_agents)
+    agent = Agent(state_size=state_size,
+                  action_size=action_size,
+                  random_seed=seed,
+                  num_agents=num_agents)
 
     return env, agent
 
@@ -77,20 +80,21 @@ def random_agent(env):
     env.close()
 
 
-def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=0.5, learn_every=50, num_learn=10):
+def ddpg(env, agent, n_episodes=5000, max_t=1000, goal_score=0.5):
     brain_name = env.brain_names[0]
-    total_scores_deque = deque(maxlen=100)
-    total_scores = []
+    scores_deque = deque(maxlen=100)
+    scores = []
+    avg_score_list = []
 
     for i_episode in range(1, n_episodes + 1):
         env_info = env.reset(train_mode=True)[brain_name]
         num_agents = len(env_info.agents)
         states = env_info.vector_observations
-        scores = np.zeros(num_agents)
+        score = np.zeros(num_agents)
 
         agent.reset()
 
-        for t in tqdm.tqdm(range(max_t), leave=False):
+        for t in range(max_t):
             actions = agent.act(states)
             env_info = env.step(actions)[brain_name]
             next_states = env_info.vector_observations
@@ -100,39 +104,31 @@ def ddpg(env, agent, n_episodes=1000, max_t=1000, goal_score=0.5, learn_every=50
             agent.step(states, actions, rewards, next_states, dones)
 
             states = next_states
-            scores += env_info.rewards
-
-            if t % learn_every == 0:
-                for _ in range(num_learn):
-                    agent.step_learn(10)
+            score += rewards
 
             if np.any(dones):
                 break
 
-        mean_score = np.mean(scores)
-        min_score = np.min(scores)
-        max_score = np.max(scores)
-        total_scores_deque.append(mean_score)
-        total_scores.append(mean_score)
-        total_average_score = np.mean(total_scores_deque)
+        mean_score = np.mean(score)
 
-        print('\rEpisode {}\tAverage: {:.2f}\tMin: {:.2f}\tMax: {:.2f}'.format(
-            i_episode, total_average_score, min_score, max_score))
+        scores_deque.append(mean_score)
+        scores.append(mean_score)
+        avg_score = np.mean(scores_deque)
+        avg_score_list.append(avg_score)
 
-        if total_average_score >= goal_score and i_episode >= 100:
+        if avg_score >= goal_score or i_episode % 100 == 0:
+            print('\rEpisode {}\tAverage: {:.3f}'.format(
+                i_episode, avg_score))
             torch.save(agent.actor_local.state_dict(), 'checkpoint_actor.pth')
             torch.save(agent.critic_local.state_dict(), 'checkpoint_critic.pth')
-            print('Woot! Solved after {} episodes. Total average score: {}'.format(
-                i_episode, total_average_score))
 
-            break
+            if avg_score >= goal_score:
+                print('Woot! Solved after {} episodes. Total average score: {}'.format(
+                    i_episode, avg_score))
 
-        if i_episode % 10 == 0:
-            torch.save(agent.actor_local.state_dict(), 'checkpoint_actor.pth')
-            torch.save(agent.critic_local.state_dict(), 'checkpoint_critic.pth')
-            print('Saving Episode: {}.'.format(i_episode))
+                break
 
-    return total_scores
+    return scores, avg_score_list
 
 
 def ddpg_test(env, agent):
@@ -172,14 +168,16 @@ if RANDOM:
 
 if TRAIN:
     env_, agent_ = init_environment_and_agent()
-    scores = ddpg(env_, agent_)
+    scores_, avg_score_list_ = ddpg(env_, agent_)
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    plt.plot(np.arange(1, len(scores) + 1), scores)
+    plt.plot(np.arange(1, len(scores_) + 1), scores_)
+    plt.plot(np.arange(1, len(avg_score_list_) + 1), avg_score_list_)
     plt.ylabel('Score')
     plt.xlabel('Episode #')
     plt.show()
 
 if TEST:
+    env_, agent_ = init_environment_and_agent()
     # Run the test
     ddpg_test(env_, agent_)
